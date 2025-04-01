@@ -1,8 +1,12 @@
 class SessionsView
   def ask_for(stuff)
-    puts "#{stuff}?"
+    puts "What is your #{stuff}?"
     print "> "
     return gets.chomp
+  end
+
+  def print_welcome_message(username)
+    puts "Hello #{username}"
   end
 
   def print_wrong_credentials

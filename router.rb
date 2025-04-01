@@ -1,6 +1,6 @@
 # TODO: implement the router of your app.
 class Router
-  def initialize(meals_controller, customers_controller)
+  def initialize(meals_controller, customers_controller, sessions_controller)
     @meals_controller = meals_controller
     @customers_controller = customers_controller
     @sessions_controller = sessions_controller
@@ -10,11 +10,17 @@ class Router
   def run
     puts "Welcome to Kiki's Delivery Service"
     while @running
-      display_menu
-      user_action = gets.chomp.to_i
-      route_action(user_action)
+      @current_user = @sessions_controller.login
+      while @current_user
+        if @current_user.manager?
+          route_manager_action
+        else
+          route_rider_action
+        end
+      end
     end
   end
+
   def route_manager_action
     print_manager_menu
     choice = gets.chomp.to_i
@@ -49,9 +55,7 @@ class Router
     puts "------- MENU -------"
     puts "--------------------"
     puts "1. Add new meal"
-    puts "2. List all meals"
-    puts "3. Add new customer"
-    puts "4. List all customers"
+    puts "2. Rider things"
     puts "5. Log out"
     puts "6. Quit"
     print "> "
@@ -75,17 +79,20 @@ class Router
     case choice
     when 1 then @meals_controller.add
     when 2 then @meals_controller.list
-    when 3 then @customers_controller.add
-    when 4 then @customers_controller.list
     when 5 then logout!
     when 6 then quit
     else puts "Try again..."
     end
   end
 
-  
+  def logout!
+    @current_user = nil
+  end
+
+
   def quit
     puts "good bye!"
     @running = false
+    logout!
   end
 end
