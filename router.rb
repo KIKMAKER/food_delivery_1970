@@ -3,6 +3,7 @@ class Router
   def initialize(meals_controller, customers_controller)
     @meals_controller = meals_controller
     @customers_controller = customers_controller
+    @sessions_controller = sessions_controller
     @running = true
   end
 
@@ -14,29 +15,75 @@ class Router
       route_action(user_action)
     end
   end
-
-
-  def display_menu
-    puts "What would you like to do:"
-    puts "1 - add a meal"
-    puts "2 - list all meal"
-    puts "3 - add a customer"
-    puts "4 - list all customers"
-    puts "9 - quit"
+  def route_manager_action
+    print_manager_menu
+    choice = gets.chomp.to_i
+    print `clear`
+    manager_action(choice)
   end
 
-  def route_action(user_action)
-    case user_action
+  def route_rider_action
+    print_rider_menu
+    choice = gets.chomp.to_i
+    print `clear`
+    rider_action(choice)
+  end
+
+  def print_manager_menu
+    puts "--------------------"
+    puts "------- MENU -------"
+    puts "--------------------"
+    puts "1. Add new meal"
+    puts "2. List all meals"
+    puts "3. Add new customer"
+    puts "4. List all customers"
+    puts "5. Add new order"
+    puts "6. List all undelivered orders"
+    puts "7. Log out"
+    puts "8. Quit"
+    print "> "
+  end
+
+  def print_rider_menu
+    puts "--------------------"
+    puts "------- MENU -------"
+    puts "--------------------"
+    puts "1. Add new meal"
+    puts "2. List all meals"
+    puts "3. Add new customer"
+    puts "4. List all customers"
+    puts "5. Log out"
+    puts "6. Quit"
+    print "> "
+  end
+
+  def manager_action(choice)
+    case choice
     when 1 then @meals_controller.add
     when 2 then @meals_controller.list
     when 3 then @customers_controller.add
     when 4 then @customers_controller.list
-    when 9 then quit
-    else
-      puts "not an option"
+    when 5 then puts "TODO"
+    when 6 then puts "TODO"
+    when 7 then logout!
+    when 8 then quit
+    else puts "Try again..."
     end
   end
 
+  def rider_action(choice)
+    case choice
+    when 1 then @meals_controller.add
+    when 2 then @meals_controller.list
+    when 3 then @customers_controller.add
+    when 4 then @customers_controller.list
+    when 5 then logout!
+    when 6 then quit
+    else puts "Try again..."
+    end
+  end
+
+  
   def quit
     puts "good bye!"
     @running = false
